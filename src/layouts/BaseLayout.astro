@@ -1,0 +1,48 @@
+---
+import "../styles/global.css";
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+const basePath = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const withBase = (path = "") => `${basePath}${path.replace(/^\/+/, "")}`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href={withBase("favicon.svg")} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href={withBase()}>Yuki Portfolio</a>
+      <nav aria-label="Primary navigation">
+        <a href={withBase("#hero")}>Home</a>
+        <a href={withBase("#about")}>About</a>
+        <a href={withBase("#experience")}>Experience</a>
+        <a href={withBase("#projects")}>Projects</a>
+        <a href={withBase("#campus")}>Campus</a>
+        <a href={withBase("#contact")}>Contact</a>
+      </nav>
+    </header>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,206 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { profile } from "../data/profile";
+import { education, internships, projects } from "../data/portfolio";
+import campus1 from "../../Campus/1.png";
+import campus2 from "../../Campus/2.png";
+import campus3 from "../../Campus/3.png";
+import campus4 from "../../Campus/4.png";
+
+const campusImages = [campus1, campus2, campus3, campus4];
+const basePath = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const withBase = (path = "") => `${basePath}${path.replace(/^\/+/, "")}`;
+const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(path) : path);
+---
+
+<BaseLayout title={`${profile.name} | Designer Portfolio`} description="Yuki 的设计师个人作品集">
+  <main>
+    <section id="hero" class="hero hero-minimal section-shell">
+      <div class="hero-copy">
+        <h1>
+          <span>Hello</span>
+          <span>I am Yuki</span>
+        </h1>
+        <p class="intro">{profile.intro}</p>
+      </div>
+    </section>
+
+    <section id="about" class="about-section section-shell">
+      <figure class="about-portrait">
+        <img src={publicAsset(profile.portrait)} alt="袁玉倩个人照片" />
+      </figure>
+      <div class="about-copy">
+        <h2>About Me</h2>
+        <h3>袁玉倩</h3>
+        <p>
+          ENFJ，一个具有工科背景的设计专业同学。有较强的业务理解能力与丰富的项目实践经验，能够抓住核心诉求与关键问题。爱设计但不钻牛角尖，懂业务也懂用户的在校生一枚。在AI浪潮下，能够积极探索，拓宽边界。业余爱好是摄影～
+        </p>
+      </div>
+    </section>
+
+    <section id="experience" class="section-shell split-section">
+      <div class="section-heading">
+        <p class="eyebrow">Timeline</p>
+        <h2>Experience</h2>
+      </div>
+      <div class="experience-groups">
+        <section class="experience-group" aria-labelledby="education-title">
+          <h3 id="education-title">Education</h3>
+          <div class="timeline" aria-label="Education timeline">
+            {
+              education.map((item) => (
+                <article class="timeline-item">
+                  <div class="timeline-date">{item.date}</div>
+                  <div class="timeline-card">
+                    <img src={publicAsset(item.logo)} alt={`${item.title} logo`} />
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </div>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="experience-group" aria-labelledby="internship-title">
+          <h3 id="internship-title">Internship</h3>
+          <div class="timeline" aria-label="Internship timeline">
+            {
+              internships.map((item) => (
+                <article class="timeline-item">
+                  <div class="timeline-date">{item.date}</div>
+                  <div class="timeline-card">
+                    <img src={publicAsset(item.logo)} alt={`${item.title} logo`} />
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </div>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="projects" class="projects-section">
+      <div class="section-shell section-heading wide-heading">
+        <p class="eyebrow">Selected Works</p>
+        <h2>Projects</h2>
+      </div>
+      <div class="project-scroll" aria-label="Project gallery">
+        <div class="project-track drag-scroll">
+          {
+            projects.map((project) => (
+              <a class="project-card" href={withBase(`projects/${project.id}/`)} aria-label={`View ${project.title}`}>
+                <figure class="project-card-cover">
+                  <img src={project.cover} alt={project.title} />
+                </figure>
+                <div class="project-card-copy">
+                  <h3>{project.title}</h3>
+                  <p>{project.tags.join("  ")}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="campus" class="campus-section">
+      <div class="section-shell section-heading wide-heading">
+        <p class="eyebrow">Practice</p>
+        <h2>Campus</h2>
+      </div>
+      <div class="campus-scroll" aria-label="Campus image gallery">
+        <div class="campus-track drag-scroll">
+          {
+            campusImages.map((image, index) => (
+              <figure class="campus-slide">
+                <img src={image.src} alt={`Campus ${index + 1}`} loading={index === 0 ? "eager" : "lazy"} />
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Contact</p>
+        <h2>Let's connect</h2>
+      </div>
+      <div class="contact-copy">
+        <div class="contact-list">
+          <div class="contact-item">
+            <span>Wechat</span>
+            <p>SgrYuan_DySy</p>
+          </div>
+          <div class="contact-item">
+            <span>Phone</span>
+            <p>+86 130 1135 7612</p>
+          </div>
+          <div class="contact-item">
+            <span>Email</span>
+            <p>1922602696@qq.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const dragScrollElements = document.querySelectorAll(".drag-scroll");
+
+    dragScrollElements.forEach((element) => {
+      if (!(element instanceof HTMLElement)) return;
+      let isDragging = false;
+      let didDrag = false;
+      let startX = 0;
+      let startScrollLeft = 0;
+
+      element.addEventListener("pointerdown", (event) => {
+        isDragging = true;
+        didDrag = false;
+        startX = event.clientX;
+        startScrollLeft = element.scrollLeft;
+        element.setPointerCapture(event.pointerId);
+        element.classList.add("is-dragging");
+      });
+
+      element.addEventListener("pointermove", (event) => {
+        if (!isDragging) return;
+        const deltaX = event.clientX - startX;
+        if (Math.abs(deltaX) > 5) didDrag = true;
+        element.scrollLeft = startScrollLeft - deltaX;
+      });
+
+      element.addEventListener(
+        "click",
+        (event) => {
+          if (!didDrag) return;
+          event.preventDefault();
+          event.stopPropagation();
+          didDrag = false;
+        },
+        true,
+      );
+
+      const stopDragging = (event: PointerEvent) => {
+        if (!isDragging) return;
+        isDragging = false;
+        element.releasePointerCapture(event.pointerId);
+        element.classList.remove("is-dragging");
+      };
+
+      element.addEventListener("pointerup", stopDragging);
+      element.addEventListener("pointercancel", stopDragging);
+      element.addEventListener("pointerleave", stopDragging);
+    });
+  </script>
+</BaseLayout>

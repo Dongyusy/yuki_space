@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+npm-debug.log*
+照片贴纸风.png
+public/images/projects/
