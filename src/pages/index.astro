@@ -6,6 +6,10 @@ import campus1 from "../../Campus/1.png";
 import campus2 from "../../Campus/2.png";
 import campus3 from "../../Campus/3.png";
 import campus4 from "../../Campus/4.png";
+import photoWall from "../../照片墙.png";
+import contactPhotoWall from "../../照片墙2.png";
+import badgePhoto from "../../工牌照.png";
+import arrowImage from "../../箭头.png";
 
 const campusImages = [campus1, campus2, campus3, campus4];
 const basePath = import.meta.env.BASE_URL.endsWith("/")
@@ -25,11 +29,18 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
         </h1>
         <p class="intro">{profile.intro}</p>
       </div>
+      <figure class="hero-photo-wall">
+        <img src={badgePhoto.src} alt="Yuki badge photo" loading="eager" />
+      </figure>
     </section>
+
+    <figure class="section-arrow section-arrow--hero" aria-hidden="true">
+      <img src={arrowImage.src} alt="" />
+    </figure>
 
     <section id="about" class="about-section section-shell">
       <figure class="about-portrait">
-        <img src={publicAsset(profile.portrait)} alt="袁玉倩个人照片" />
+        <img src={photoWall.src} alt="Yuki photo wall" />
       </figure>
       <div class="about-copy">
         <h2>About Me</h2>
@@ -39,6 +50,10 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
         </p>
       </div>
     </section>
+
+    <figure class="section-arrow section-arrow--about" aria-hidden="true">
+      <img src={arrowImage.src} alt="" />
+    </figure>
 
     <section id="experience" class="section-shell split-section">
       <div class="section-heading">
@@ -151,6 +166,9 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
           </div>
         </div>
       </div>
+      <figure class="contact-photo-wall">
+        <img src={contactPhotoWall.src} alt="Yuki contact photo wall" loading="lazy" />
+      </figure>
     </section>
   </main>
 
@@ -163,20 +181,25 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
       let didDrag = false;
       let startX = 0;
       let startScrollLeft = 0;
+      const dragThreshold = 12;
 
       element.addEventListener("pointerdown", (event) => {
         isDragging = true;
         didDrag = false;
         startX = event.clientX;
         startScrollLeft = element.scrollLeft;
-        element.setPointerCapture(event.pointerId);
-        element.classList.add("is-dragging");
       });
 
       element.addEventListener("pointermove", (event) => {
         if (!isDragging) return;
         const deltaX = event.clientX - startX;
-        if (Math.abs(deltaX) > 5) didDrag = true;
+        if (!didDrag && Math.abs(deltaX) > dragThreshold) {
+          didDrag = true;
+          element.setPointerCapture(event.pointerId);
+          element.classList.add("is-dragging");
+        }
+        if (!didDrag) return;
+        event.preventDefault();
         element.scrollLeft = startScrollLeft - deltaX;
       });
 
@@ -194,7 +217,9 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
       const stopDragging = (event: PointerEvent) => {
         if (!isDragging) return;
         isDragging = false;
-        element.releasePointerCapture(event.pointerId);
+        if (element.hasPointerCapture(event.pointerId)) {
+          element.releasePointerCapture(event.pointerId);
+        }
         element.classList.remove("is-dragging");
       };
 

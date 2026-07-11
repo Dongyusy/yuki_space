@@ -32,7 +32,8 @@ const experienceLogoModules = import.meta.glob<ProjectImageModule>(
 
 const imageNumber = (path: string) => {
   const filename = path.split("/").pop() ?? "";
-  return Number.parseInt(filename.split(".")[0], 10);
+  const stem = filename.split(".")[0];
+  return /^\d+$/.test(stem) ? Number.parseInt(stem, 10) : null;
 };
 
 const projectImageSrc = (folder: string, imageIndex: number) => {
@@ -49,8 +50,11 @@ const projectImageSrc = (folder: string, imageIndex: number) => {
 
 const projectDetailImages = (folder: string) =>
   Object.entries(projectImageModules)
-    .filter(([path]) => path.includes(`/${folder}/`) && imageNumber(path) > 0)
-    .sort(([a], [b]) => imageNumber(a) - imageNumber(b))
+    .filter(([path]) => {
+      const index = imageNumber(path);
+      return path.includes(`/${folder}/`) && index !== null && index > 0;
+    })
+    .sort(([a], [b]) => (imageNumber(a) ?? 0) - (imageNumber(b) ?? 0))
     .map(([, image]) => image.src);
 
 const experienceLogoSrc = (filename: string) => {
