@@ -6,9 +6,6 @@ import campus1 from "../../Campus/1.png";
 import campus2 from "../../Campus/2.png";
 import campus3 from "../../Campus/3.png";
 import campus4 from "../../Campus/4.png";
-import photoWall from "../../照片墙.png";
-import contactPhotoWall from "../../照片墙2.png";
-import badgePhoto from "../../工牌照.png";
 import arrowImage from "../../箭头.png";
 
 const campusImages = [campus1, campus2, campus3, campus4];
@@ -17,6 +14,7 @@ const basePath = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const withBase = (path = "") => `${basePath}${path.replace(/^\/+/, "")}`;
 const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(path) : path);
+const homeAsset = (filename: string) => withBase(`images/home/${filename}`);
 ---
 
 <BaseLayout title={`${profile.name} | Designer Portfolio`} description="Yuki 的设计师个人作品集">
@@ -30,7 +28,7 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
         <p class="intro">{profile.intro}</p>
       </div>
       <figure class="hero-photo-wall">
-        <img src={badgePhoto.src} alt="Yuki badge photo" loading="eager" />
+        <img src={homeAsset("badge-photo.webp")} alt="Yuki badge photo" loading="eager" />
       </figure>
     </section>
 
@@ -40,7 +38,7 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
 
     <section id="about" class="about-section section-shell">
       <figure class="about-portrait">
-        <img src={photoWall.src} alt="Yuki photo wall" />
+        <img src={homeAsset("photo-wall.webp")} alt="Yuki photo wall" />
       </figure>
       <div class="about-copy">
         <h2>About Me</h2>
@@ -167,7 +165,7 @@ const publicAsset = (path: string) => (path.startsWith("/images/") ? withBase(pa
         </div>
       </div>
       <figure class="contact-photo-wall">
-        <img src={contactPhotoWall.src} alt="Yuki contact photo wall" loading="lazy" />
+        <img src={homeAsset("contact-photo-wall.webp")} alt="Yuki contact photo wall" loading="lazy" />
       </figure>
     </section>
   </main>
